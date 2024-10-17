@@ -14,6 +14,10 @@ function SearchBar() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
+    if (query.length < 0) {
+      setQuery('')
+    }
+
   };
 
   useEffect(() => {
@@ -28,8 +32,6 @@ function SearchBar() {
   }, [query]); 
 
 
-  
-  // Fetch data when debounced query changes
   useEffect(() => {
     const fetchData = async () => {
       if (debouncedQuery) {
@@ -40,6 +42,8 @@ function SearchBar() {
         } catch (error) {
           console.error('Error fetching data:', error);
         }
+      } else {
+        setResults([])
       }
     };
 
@@ -65,7 +69,7 @@ function SearchBar() {
             ))}
           </ul>
         ) : (
-          <p>No Data</p>  
+          <p>Type to Search</p>  
         )}
       </div>
     </div>
