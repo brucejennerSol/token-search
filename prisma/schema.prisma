@@ -7,13 +7,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model token_list {
+model tokens {
   id                    Int       @id @default(autoincrement())
   address               String    @unique
   name                  String
   symbol                String
   decimals              Int
-  daily_volume          Int?
+  created_at            DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at            DateTime? @default(now()) @db.Timestamptz(6)
+  daily_volume          Int
+  tags                  String[]
   logo_uri              String?
   tags_birdeye_trending Boolean
   tags_community        Boolean
@@ -27,10 +30,4 @@ model token_list {
   minted_at             DateTime?
   permanent_delegate    String?
   extensions            Json?
-  created_at            DateTime? @default(now()) @db.Timestamptz(6)
-  updated_at            DateTime? @default(now()) @db.Timestamptz(6)
 }
-
-
-//populate new table which has a timestamp token_timestamp
-// -> once its populated switch names (in one transaction)

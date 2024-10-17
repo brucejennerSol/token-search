@@ -1,6 +1,7 @@
 'use client'
 
-import React, { useState, FormEvent, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import type { FormEvent } from 'react';
 
 interface SearchResult {
   id: number
@@ -14,10 +15,6 @@ function SearchBar() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
-    if (query.length < 0) {
-      setQuery('')
-    }
-
   };
 
   useEffect(() => {

@@ -8,7 +8,7 @@ export async function GET(request: Request) {
     const query = searchParams.get('q')
 
     if (query) {
-        const token = await prisma.token_list.findMany({
+        const token = await prisma.tokens.findMany({
             where: {
                 OR: [
                     { symbol: { startsWith: query, mode: 'insensitive' } },
