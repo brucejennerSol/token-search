@@ -5,17 +5,14 @@ const prisma = new PrismaClient()
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
-    const search = searchParams.get('search')
+    const query = searchParams.get('q')
 
-    const searchArr = search?.split("%20")
-    const searchString = searchArr?.join(" ")
-
-    if (search) {
+    if (query) {
         const token = await prisma.token_list.findMany({
             where: {
                 OR: [
-                    { symbol: { startsWith: searchString } },
-                    { name:   { startsWith: searchString } }
+                    { symbol: { startsWith: query, mode: 'insensitive' } },
+                    { name:   { startsWith: query, mode: 'insensitive' } }
                 ],
             },
             orderBy: [
@@ -35,3 +32,4 @@ export async function GET(request: Request) {
 }
 
 // search first & second word
+// ignore spaces
