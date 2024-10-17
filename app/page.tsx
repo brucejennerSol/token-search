@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, FormEvent } from 'react';
+import React, { useState, FormEvent, useEffect } from 'react';
 
 interface SearchResult {
   id: number
@@ -10,35 +10,51 @@ interface SearchResult {
 function SearchBar() {
   const [query, setQuery] = useState<string>('');
   const [results, setResults] = useState<SearchResult[]>([]);
+  const [debouncedQuery, setDebouncedQuery] = useState<string>(query);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
   };
 
-  const handleSearch = async (e: FormEvent) => {
-    e.preventDefault(); // Prevents the form from submitting and causing a page reload
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedQuery(query); 
+    }, 200);
 
-    try {
-      // Fetching data from the API endpoint
-      const response = await fetch(`/api/alltokens?q=${query}`);
-      const data = await response.json();
+    // Cleanup function to clear timeout if the user types again before 200ms
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [query]); 
 
-      setResults(data.token);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
+
+  
+  // Fetch data when debounced query changes
+  useEffect(() => {
+    const fetchData = async () => {
+      if (debouncedQuery) {
+        try {
+          const response = await fetch(`/api/alltokens?q=${debouncedQuery}`);
+          const data = await response.json();
+          setResults(data.token); 
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      }
+    };
+
+    fetchData();
+  }, [debouncedQuery]); 
 
   return (
     <div>
-      <form onSubmit={handleSearch}>
+      <form onSubmit={(e: FormEvent) => e.preventDefault()}>
         <input
           type="text"
           value={query}
           onChange={handleInputChange}
           placeholder="Search..."
         />
-        <button type="submit">Search</button>
       </form>
 
       <div>
