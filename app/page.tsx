@@ -2,9 +2,14 @@
 
 import React, { useState, FormEvent } from 'react';
 
+interface SearchResult {
+  id: number
+  name: string,
+}
+
 function SearchBar() {
   const [query, setQuery] = useState<string>('');
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<SearchResult[]>([]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
