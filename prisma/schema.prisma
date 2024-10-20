@@ -13,8 +13,8 @@ model tokens {
   name                  String
   symbol                String
   decimals              Int
-  created_at            DateTime? @default(now()) @db.Timestamptz(6)
-  updated_at            DateTime? @default(now()) @db.Timestamptz(6)
+  created_at            DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at            DateTime  @default(now()) @db.Timestamptz(6)
   daily_volume          Int
   tags                  String[]
   logo_uri              String?
@@ -30,4 +30,37 @@ model tokens {
   minted_at             DateTime?
   permanent_delegate    String?
   extensions            Json?
+}
+
+model token_price {
+  id         Int      @id @default(autoincrement())
+  address    String   @unique
+  symbol     String
+  price_usdc Int
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+  fetched_ts DateTime
+}
+
+enum Status {
+  SUCCESS
+  FAIL
+}
+
+model transaction {
+  id               Int      @id @default(autoincrement())
+  user_address     String
+  transaction_ts   DateTime
+  type             String
+  token_address    String
+  quantity         Int
+  amount_token     Int
+  amount_sol       Int
+  amount_usdc      Int
+  quantity_holding Int
+  sold_from        Json
+  profit_loss      Int
+  status           Status
+  created_at       DateTime @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime @default(now()) @db.Timestamptz(6)
 }

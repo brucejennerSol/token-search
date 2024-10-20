@@ -6,7 +6,7 @@ import type { tokens } from "@prisma/client";
 export async function GET(request: Request): Promise<NextResponse> {
     const { searchParams } = new URL(request.url)
     const query  = searchParams.get('q')
-    const count  = searchParams.get('count') // item count 
+    let   count  = searchParams.get('count') // item count 
     let   offset = searchParams.get('offset') //where to start
 
     const orderByConditions = [
@@ -17,38 +17,38 @@ export async function GET(request: Request): Promise<NextResponse> {
         { tags_community: Prisma.SortOrder.desc },
     ];
 
-    if (!offset) {
-        offset = '0'
-    }
+    offset = offset || '0';
+    count  = count  || '0';
 
-    if (query && count) {
-        let token: tokens[];
+    if (query) {
+        let token: tokens[] = []
 
         if (query.length >= 32) {
+            const singleToken = await prisma.tokens.findFirst({
+                where: {
+                    address: { startsWith: query, mode: 'insensitive' }
+                },
+                orderBy: orderByConditions,
+                take: 1, 
+                skip: 0
+            })
+
+            if (singleToken) token = [singleToken]
+            
+        } else {
             token = await prisma.tokens.findMany({
                 where: {
                     OR: [
-                        { address: { startsWith: query, mode: 'insensitive' } },
+                        { symbol: { startsWith: query, mode: 'insensitive' } },
+                        { name:   { startsWith: query, mode: 'insensitive' } },
                     ],
                 },
                 orderBy: orderByConditions,
-                take: Number(count), 
+                take: Number(count),
                 skip: Number(offset)
             })
         }
 
-        token = await prisma.tokens.findMany({
-            where: {
-                OR: [
-                    { symbol: { startsWith: query, mode: 'insensitive' } },
-                    { name:   { startsWith: query, mode: 'insensitive' } }
-                ],
-            },
-            orderBy: orderByConditions,
-            take: Number(count),
-            skip: Number(offset)
-        })
-    
         return NextResponse.json({ token })
     } 
 
