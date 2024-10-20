@@ -5,23 +5,18 @@ import type { tokens } from "@prisma/client";
 
 export async function GET(request: Request): Promise<NextResponse> {
     const { searchParams } = new URL(request.url)
-    const query  = searchParams.get('q')
-    const count  = searchParams.get('count') // item count 
-    let   offset = searchParams.get('offset') //where to start
+    const query = searchParams.get('q')
+    const limit = searchParams.get('limit')
 
     const orderByConditions = [
-        { daily_volume: Prisma.SortOrder.desc },   
+        { daily_volume: Prisma.SortOrder.desc },   // Use Prisma.SortOrder
         { tags_birdeye_trending: Prisma.SortOrder.desc },
         { tags_lst: Prisma.SortOrder.desc },
         { tags_verified: Prisma.SortOrder.desc },
         { tags_community: Prisma.SortOrder.desc },
     ];
 
-    if (!offset) {
-        offset = '0'
-    }
-
-    if (query && count) {
+    if (query && limit) {
         let token: tokens[];
 
         if (query.length >= 32) {
@@ -32,8 +27,7 @@ export async function GET(request: Request): Promise<NextResponse> {
                     ],
                 },
                 orderBy: orderByConditions,
-                take: Number(count), 
-                skip: Number(offset)
+                take: Number(limit) //TODO change to be handeled on the frontend
             })
         }
 
@@ -45,8 +39,7 @@ export async function GET(request: Request): Promise<NextResponse> {
                 ],
             },
             orderBy: orderByConditions,
-            take: Number(count),
-            skip: Number(offset)
+            take: Number(limit)
         })
     
         return NextResponse.json({ token })
