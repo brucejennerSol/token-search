@@ -6,11 +6,11 @@ import type { tokens } from "@prisma/client";
 export async function GET(request: Request): Promise<NextResponse> {
     const { searchParams } = new URL(request.url)
     const query  = searchParams.get('q')
-    let   count  = searchParams.get('count') // item count 
+    let   count  = searchParams.get('count') // item count
     let   offset = searchParams.get('offset') //where to start
 
     const orderByConditions = [
-        { daily_volume: Prisma.SortOrder.desc },   
+        { daily_volume: Prisma.SortOrder.desc },
         { tags_birdeye_trending: Prisma.SortOrder.desc },
         { tags_lst: Prisma.SortOrder.desc },
         { tags_verified: Prisma.SortOrder.desc },
@@ -29,12 +29,12 @@ export async function GET(request: Request): Promise<NextResponse> {
                     address: { startsWith: query, mode: 'insensitive' }
                 },
                 orderBy: orderByConditions,
-                take: 1, 
+                take: 1,
                 skip: 0
             })
 
             if (singleToken) token = [singleToken]
-            
+
         } else {
             token = await prisma.tokens.findMany({
                 where: {
@@ -50,7 +50,13 @@ export async function GET(request: Request): Promise<NextResponse> {
         }
 
         return NextResponse.json({ token })
-    } 
-
-    return NextResponse.json({ message: "Specify query parameter"})
+    } else {
+        let token: tokens[] = []
+            token = await prisma.tokens.findMany({
+                orderBy: orderByConditions,
+                take: 10,
+                skip: 0,
+            })
+        return NextResponse.json({ token })
+    }
 }
