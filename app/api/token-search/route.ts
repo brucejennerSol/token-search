@@ -50,13 +50,13 @@ export async function GET(request: Request): Promise<NextResponse> {
         }
 
         return NextResponse.json({ token })
-    } else {
-        let token: tokens[] = []
-            token = await prisma.tokens.findMany({
-                orderBy: orderByConditions,
-                take: 10,
-                skip: 0,
-            })
-        return NextResponse.json({ token })
     }
+
+    const token = await prisma.tokens.findMany({
+        orderBy: orderByConditions,
+        take: 10,
+        skip: 0,
+    })
+
+    return NextResponse.json({ token })
 }
