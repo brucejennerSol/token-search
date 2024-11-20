@@ -64,23 +64,9 @@ function MainLayout() {
         <div style={{ fontSize: '1.5rem', fontWeight: 'bold', display: 'flex', flexDirection: 'row' }}>
           <img src="/img/logo.png" alt="Logo" style={{ height: '32px', margin: '20px' }} />
           <h1 style={{ fontSize: '28px', marginBottom: '10px', marginTop: '20px', fontFamily: 'system-ui' }}>
-            SOLERA
+            Solera
           </h1>
         </div>
-
-        <button
-          style={{
-            padding: '10px 20px',
-            backgroundColor: 'transparent',
-            color: 'white',
-            border: '1px solid lightgray',
-            borderRadius: '7px',
-            cursor: 'pointer',
-            fontSize: '1rem',
-          }}
-        >
-          Download coming soon...
-        </button>
       </nav>
 
       <div style={{ paddingTop: '150px', textAlign: 'center' }}>
@@ -94,7 +80,7 @@ function MainLayout() {
             fontFamily: 'system-ui',
           }}
         >
-          THE TRADERS WALLET POWERING THE BULLRUN
+          The Solana wallet powering the bullrun
         </p>
 
         <div
@@ -137,7 +123,7 @@ function MainLayout() {
                 marginRight:'200px',
               }}
             >
-              Be part of the new era of sol
+              Sign up to get notified when we launch
             </p>
             <SignUp />
           </div>

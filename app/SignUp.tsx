@@ -105,7 +105,7 @@ function SignUpForm() {
 
       </form>
 
-      {message && <p style={{ textAlign: 'left', marginTop: '10px', marginLeft: "10px", color: loading ? 'green' : '#bd323c' }}>{message}</p>}
+      {message && <p style={{ textAlign: 'left', marginTop: '10px', marginLeft: "10px", color: 'white' }}>{message}</p>}
     </div>
   );
 }
